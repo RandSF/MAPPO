@@ -1,0 +1,12 @@
+1. 执行`step(action)`时，忽略包装的话是执行`env.step(action)->env._execute_world_step()->env.world.step()`
+  + `env.step(action)`：
+  + 检查agent_selection是否done(死亡?)，若done则执行相应程序
+  + 否则指定agent_selection的current_actions为`action`
+  + 如果下一个agent的index=0(即所有agent都动了一遍)，就执行`env._execute_world_step()`并`++step`(用来控制结束，一旦结束所有agent就done了)
+    + `env._execute_world_step()`:
+    + 设置所有agent的动作(`_set_action()`)，然后`env.world.step()`
+      + `env.world.step()`：
+      + 计算action导致的agent的位置和速度(坐标和动量)的变化
+    + 计算各个agent的reward
++ 结论：**有几个agent就step几次**(且adversary在前，"友方agent在后")
+2. mpe的所有agent都用agent.name作为参数，函数通过name索引到指定的agent
